@@ -1,33 +1,32 @@
 package services
 
-import models.{Trinket, Backpack}
-
+import models.{BackpackWithSelectionChance, Trinket, Backpack}
 import scala.util.Random
 
 class BackpackService {
  val MAX_WEIGHT = 750
   val NUMBER_OF_GENES = 15
-  val NUMBER_OF_INITIAL_GENES = 5
+  val NUMBER_OF_INITIAL_GENES = 4
 
-  def calculateValue(backpack: Backpack): Double = {
-    backpack.genes.zipWithIndex.map{ case(gene: Char, index: Int) => if(gene == '1') TrinketFactory.trinkets.drop(index).head.quality else 0 }.sum
+  def calculateValue(genes: String): Double = {
+    genes.zipWithIndex.map{ case(gene: Char, index: Int) => if(gene == '1') TrinketFactory.trinkets.drop(index).head.quality else 0 }.sum
   }
 
-  def calculateWeight(backpack: Backpack): Double = {
-    backpack.genes.zipWithIndex.map{ case(gene: Char, index: Int) => if(gene == '1') TrinketFactory.trinkets.drop(index).head.cost else 0 }.sum
+  def calculateWeight(genes: String): Double = {
+    genes.zipWithIndex.map{ case(gene: Char, index: Int) => if(gene == '1') TrinketFactory.trinkets.drop(index).head.cost else 0 }.sum
   }
 
-  def calculateFitness(backpack: Backpack) = {
-    val weight = calculateWeight(backpack)
-    if(weight > MAX_WEIGHT) 0.0 else calculateValue(backpack)
+  def calculateFitness(genes: String) = {
+    val weight = calculateWeight(genes)
+    if(weight > MAX_WEIGHT) 0.0 else calculateValue(genes)
   }
 
   def createRandomBackpack = {
 
-    val chosenIndices = (0 to NUMBER_OF_INITIAL_GENES).map( attempt => Random.nextInt(NUMBER_OF_GENES))
+    val chosenIndices = (0 until NUMBER_OF_INITIAL_GENES).map( attempt => Random.nextInt(NUMBER_OF_GENES))
     val builder= new StringBuilder
 
-    (0 to NUMBER_OF_GENES).map( geneIndex =>
+    (0 until NUMBER_OF_GENES).map( geneIndex =>
         if(chosenIndices.contains(geneIndex)){
           //todo filter out too heavy backpacks!
           builder.append("1")
@@ -36,14 +35,14 @@ class BackpackService {
         }
     )
 
-    Backpack(builder.toString)
+    createBackpack(builder.toString)
   }
 
   def mutateChild(mutationPercentage: Double, mutationThreshHold: Int, child: Backpack) = {
 
-    if(mutationThreshHold >= 100 - mutationPercentage * 100){
+    if(mutationThreshHold >=100 - mutationPercentage * 100){
       val randomIndex = Random.nextInt(NUMBER_OF_GENES)
-      val newGenes = child.genes
+      val newGenes: String = child.genes
         .zipWithIndex
         .map{ case (gene: Char, index: Int) =>
           if(index == randomIndex){
@@ -51,18 +50,22 @@ class BackpackService {
           } else {
             gene
           }
-      }.toString()
-
-      Backpack(newGenes)
+      }.foldLeft[String]("")((agg: String, charToAdd: Char) => agg + charToAdd)
+      createBackpack(newGenes)
     }else{
       child
     }
-
   }
 
+  def createBackpack(newGenes: String): Backpack = {
+    Backpack(newGenes, calculateValue(newGenes), calculateWeight(newGenes), calculateFitness(newGenes))
+  }
+
+  def createBackpackWithSelectionChance(newGenes: String, selectionChance: Int): BackpackWithSelectionChance = {
+    BackpackWithSelectionChance(newGenes, calculateValue(newGenes), calculateWeight(newGenes), calculateFitness(newGenes), selectionChance)
+  }
 
   def getBackpackTrinkets(backpack: Backpack): List[Trinket] = {
     backpack.genes.zipWithIndex.flatMap { case (gene: Char, index: Int) => if (gene == '1') TrinketFactory.trinkets.drop(index).headOption else None }.toList
   }
-
 }
