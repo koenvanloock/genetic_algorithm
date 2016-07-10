@@ -1,20 +1,67 @@
-@*
- * This template takes a single argument, a String containing a
- * message to display.
- *@
-@(message: String)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SurvivalOfTheFittest</title>
+        <link rel="stylesheet" href="@routes.Assets.versioned("bower_components/font-awesome/css/font-awesome.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.versioned("bower_components/angular-material/angular-material.css")">
+        <link href="@routes.Assets.versioned("bower_components/angular-material-data-table/dist/md-data-table.min.css")" rel="stylesheet" type="text/css"/>
 
-@*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
-@main("Welcome to Play") {
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    </head>
+    <body ng-app="SurvivalOfTheFittestApp" ng-cloak>
 
-    @*
-     * Get an `Html` object by calling the built-in Play welcome
-     * template and passing a `String` message.
-     *@
-    @play20.welcome(message, style = "Scala")
+        <div ng-controller="algorithmController" >
+            <md-content>
+                <md-toolbar class="md-hue-2">
+                    <h2 style="padding-left:20px;">Survival of the fittest!</h2>
+                </md-toolbar>
+            </md-content>
 
-}
+
+          <div flex="50" class="md-margin">
+            <md-table-container>
+                <table md-table md-progress="promise">
+                    <thead md-head style="background:  rgba(255, 215, 46, 0.9) ;">
+                        <tr md-row>
+                            <th md-column>Genes</th>
+                            <th md-column md-numeric>value</th>
+                            <th md-column md-numeric>weight</th>
+                        </tr>
+                    </thead>
+                    <tbody md-body style="background:  rgba(255, 255, 0, 0.9);">
+                        <tr md-row md-auto-select ng-repeat="backpack in backpacks.data">
+                            <td md-cell>{{backpack.genes}}</td>
+                            <td md-cell>{{backpack.value}}</td>
+                            <td md-cell>{{backpack.weight}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+              <md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="query.page" md-total="{{population[query.generationNr].length}}" md-on-paginate="getBackpacks" md-page-select style="background:  rgba(255, 255, 0, 0.9);"></md-table-pagination>
+          </div>
+
+            <div layout="row" class="md-margin" style="background:  rgba(255, 215, 46, 0.9) ;" flex="50">
+                <label style="font-weight: bold">Generation nr.</label>
+                <md-select placeholder="generationNr" ng-model="query.generationNr"  style="background:  rgba(255, 215, 46, 0.9) ;"
+                            ng-change="getBackpacks()">
+                    <md-option ng-repeat="generationNumber in generationNumbers">{{generationNumber}}</md-option>
+                </md-select>
+
+            </div>
+
+        </div>
+
+        <script type="application/javascript" src="@routes.Assets.versioned("bower_components/angular/angular.js")"></script>
+
+        <script src="@routes.Assets.versioned("bower_components/angular-aria/angular-aria.js")"></script>
+        <script src="@routes.Assets.versioned("bower_components/angular-animate/angular-animate.js")"></script>
+        <script src="@routes.Assets.versioned("bower_components/angular-material/angular-material.js")"></script>
+        <script src="@routes.Assets.versioned("bower_components/angular-material-data-table/dist/md-data-table.min.js")"></script>
+
+
+        <script type="application/javascript" src="@routes.Assets.versioned("javascripts/survivalOfTheFittest.js")"></script>
+        <script type="application/javascript" src="@routes.Assets.versioned("javascripts/algorithmController.js")"></script>
+        <script type="application/javascript" src="@routes.Assets.versioned("javascripts/algorithmService.js")"></script>
+    </body>
+</html>

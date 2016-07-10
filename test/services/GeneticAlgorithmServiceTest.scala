@@ -1,6 +1,6 @@
 package services
 
-import models.BackpackWithSelectionChance
+import models.{Backpack, BackpackWithSelectionChance}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatestplus.play.PlaySpec
@@ -27,6 +27,7 @@ class GeneticAlgorithmServiceTest extends PlaySpec{
 
       createdChild.genes must not equal parentOne.genes
       createdChild.genes must not equal parentTwo.genes
+      createdChild.genes.length mustBe backpackService.NUMBER_OF_GENES
     }
 
     "draw an initial generation" in {
@@ -37,13 +38,15 @@ class GeneticAlgorithmServiceTest extends PlaySpec{
 
     "draw a next generation" in {
       val initialGeneration  = geneticAlgorithmService.drawInitialGeneration
-      geneticAlgorithmService.drawGeneration(initialGeneration).length mustBe geneticAlgorithmService.GENERATIONSIZE
+      val nextGeneration = geneticAlgorithmService.drawGeneration(initialGeneration)
+        nextGeneration.length mustBe geneticAlgorithmService.GENERATIONSIZE
+      nextGeneration.drop(10).head.genes.length mustBe backpackService.NUMBER_OF_GENES
     }
+
 
     "draw all generations" in {
       val initialGeneration  = geneticAlgorithmService.drawInitialGeneration
       val population = geneticAlgorithmService.drawNextGenerations(initialGeneration)
-      println(population.mkString("\n\n"))
       population.length mustBe 201
       population.drop(33).head.length mustBe geneticAlgorithmService.GENERATIONSIZE
     }

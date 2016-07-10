@@ -1,3 +1,3 @@
 package models
 
-case class Trinket(quality : Double, cost : Double, name: String)
+case class Trinket(cost : Double, quality : Double,  name: String)

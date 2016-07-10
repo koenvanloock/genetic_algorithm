@@ -6,7 +6,7 @@ import scala.util.Random
 class BackpackService {
  val MAX_WEIGHT = 750
   val NUMBER_OF_GENES = 15
-  val NUMBER_OF_INITIAL_GENES = 4
+  val NUMBER_OF_INITIAL_GENES = 5
 
   def calculateValue(genes: String): Double = {
     genes.zipWithIndex.map{ case(gene: Char, index: Int) => if(gene == '1') TrinketFactory.trinkets.drop(index).head.quality else 0 }.sum
