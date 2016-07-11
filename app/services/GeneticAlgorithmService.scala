@@ -7,9 +7,7 @@ import models.{BackpackWithSelectionChance, Backpack}
 import scala.util.Random
 
 class GeneticAlgorithmService @Inject()(backpackService: BackpackService) {
-  def getRequestedBackPacks(generationNumber: Int, page: Int, limit: Int): List[Backpack] = {
-    population.drop(generationNumber).headOption.map(generation => generation.slice((page - 1) * limit, (page - 1) * limit + limit)).getOrElse(List())
-  }
+
 
   type Generation = List[Backpack]
   type GenerationWithSelectionChance = List[BackpackWithSelectionChance]
@@ -98,5 +96,19 @@ class GeneticAlgorithmService @Inject()(backpackService: BackpackService) {
 
     val newGenes = joinGenes(parentOne.genes, parentTwo.genes)
     backpackService.createBackpack(newGenes)
+
+
+  }
+
+  def getMaxes = population.map(generation => generation.map(_.fitness).max)
+
+  def calculateProgressiveAvg: (Generation) => Double = {
+    generation => generation.foldLeft((0.0, 1))((t: (Double, Int), pack: Backpack) => ( (t._1 + pack.fitness) / t._2, t._2 + 1))._1
+  }
+
+  def getAverages: List[Double] = population.map(generation => generation.map(_.fitness).sum/generation.length)
+
+  def getRequestedBackPacks(generationNumber: Int, page: Int, limit: Int): List[Backpack] = {
+    population.drop(generationNumber).headOption.map(generation => generation.slice((page - 1) * limit, (page - 1) * limit + limit)).getOrElse(List())
   }
 }

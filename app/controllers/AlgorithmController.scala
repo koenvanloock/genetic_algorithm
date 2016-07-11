@@ -12,7 +12,8 @@ class AlgorithmController @Inject()(algorithmService: GeneticAlgorithmService) e
   def runAlgorithm = Action{
     val initialGeneration = algorithmService.drawInitialGeneration
     val population = algorithmService.drawNextGenerations(initialGeneration)
-    Ok(populationToJson(population))
+    //Ok(populationToJson(population))
+    Ok
   }
 
 
@@ -29,5 +30,19 @@ class AlgorithmController @Inject()(algorithmService: GeneticAlgorithmService) e
       val backpacks: List[Backpack] = algorithmService.getRequestedBackPacks(resolvedGenerationNumber, resolvedPage, resolvedLimit)
 
       Ok(Json.toJson(backpacks.map(Json.toJson(_)(Json.writes[Backpack]))))
+  }
+
+  def getPopulationSize = Action(Ok(Json.obj("populationSize"->algorithmService.population.length)))
+  def getGenerationSize = Action(Ok(Json.obj("generationSize"->algorithmService.GENERATIONSIZE)))
+
+  def getChartData = Action{
+    val avgs = algorithmService.getAverages
+    val maxs = algorithmService.getMaxes
+
+    Ok(Json.obj(
+      "avg" -> Json.toJson(avgs),
+      "maxs"-> Json.toJson(maxs)
+    ))
+
   }
 }

@@ -5,12 +5,21 @@ angular.module("SurvivalOfTheFittestApp").controller("algorithmController", ["$s
     $scope.population = [];
     $scope.generationNumbers = [];
 
-    algorithmService.drawPopulation().then(function(response){
-        $scope.population = response.data;
-        for(var i=0; i<= $scope.population.length;i++){
-            $scope.generationNumbers.push(i+1);
-        }
-        $scope.getBackpacks();
+    algorithmService.drawPopulation().then(function(){
+        //$scope.population = response.data;
+
+        algorithmService.getPopulationSize().then(function(response){
+            $scope.populationSize = response.data.populationSize;
+            algorithmService.setPopulationSize($scope.populationSize);
+            for(var i=0; i< $scope.populationSize;i++){
+                $scope.generationNumbers.push(i);
+            }
+        });
+        algorithmService.getGenerationSize().then(function(response){
+           $scope.generationSize = response.data.generationSize;
+            $scope.getBackpacks();
+        });
+
     });
 
     $scope.query = {
