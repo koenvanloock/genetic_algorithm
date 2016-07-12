@@ -14,14 +14,27 @@ angular.module("SurvivalOfTheFittestApp").service("algorithmService", ["$http","
         getPopulationSize: function(){
             return $http.get(base.url + "/populationsize");
         },
-        getGenerationSize: function(){
-            return $http.get(base.url + "/generationsize")
+        getInitialConfig: function(){
+            return $http.get(base.url + "/initialConfig");
         },
         getChartData: function(){
             return $http.get(base.url + "/chartdata")
         },
         getLocalPopulationSize: function(){return populationSize;},
-        setPopulationSize: function(popSize){ populationSize = popSize;}
+        setPopulationSize: function(popSize){ populationSize = popSize;},
+
+        setMutationPercentage: function(percentage){
+            return $http.post(base.url + "/mutationpercentage/"+percentage);
+        },
+        setMaxWeight: function(maxWeight){
+            return $http.post(base.url + "/maxweight/"+maxWeight);
+        },
+        setGenerationSize: function(generationSize){
+            return $http.post(base.url + "/generationsize/"+generationSize);
+        },
+        setNumberOfGenerations: function(numberOfGenerations){
+            return $http.post(base.url + "/numberofgenerations/"+numberOfGenerations)
+        }
     };
 }
 ]);

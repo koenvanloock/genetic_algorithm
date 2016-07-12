@@ -2,10 +2,7 @@ angular.module("SurvivalOfTheFittestApp").controller("chartController", ['$scope
 
     $scope.labels = [];
     $scope.series = ['Max.', 'Avg.'];
-    $scope.data = [
-        [65, 59, 80, 81, 56, 55, 40],
-        [28, 48, 40, 19, 86, 27, 90]
-    ];
+    $scope.data = [];
     $scope.onClick = function (points, evt) {
         console.log(points, evt);
     };
@@ -13,17 +10,35 @@ angular.module("SurvivalOfTheFittestApp").controller("chartController", ['$scope
 
 
         $scope.$watch(algorithmService.getLocalPopulationSize, function (newVal, oldVal) {
+            if(newVal != oldVal){
             algorithmService.getPopulationSize().then(function (response) {
+                $scope.labels = [];
             for (var i = 0; i < response.data.populationSize; i++) {
                 if (i % 10 === 0) {
                     $scope.labels.push(i);
                 }
             }
+
             algorithmService.getChartData().then(function (response) {
-                $scope.data = [];
-                $scope.data.push(response.data.maxs);
-                $scope.data.push(response.data.avg);
+                var newData = [];
+
+                var resultAvgs = [];
+                var resultMaxs = [];
+                response.data.avg.map(function(avg, index){
+                    if(index%10 == 0) resultAvgs.push(avg);
+                });
+
+                response.data.maxs.map(function(avg, index){
+                    if(index%10 == 0) resultMaxs.push(avg);
+                });
+
+                newData.push(resultMaxs);
+                newData.push(resultAvgs);
+                $scope.data = newData;
             })
+
         })
-    });
+
+    }});
+
 }]);

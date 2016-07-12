@@ -9,7 +9,7 @@ import org.scalatestplus.play.PlaySpec
 class GeneticAlgorithmServiceTest extends PlaySpec{
 
   "GeneticAlgorithmService" should {
-    val backpackService = new BackpackService
+    val backpackService = new BackpackService()
     val geneticAlgorithmService = new GeneticAlgorithmService(backpackService)
 
 
@@ -19,28 +19,17 @@ class GeneticAlgorithmServiceTest extends PlaySpec{
       drawnList.length mustBe >(1)
     }
 
-    "create child has a crossover gene" in {
-      val parentOne = backpackService.createBackpackWithSelectionChance("110011001110101",250)
-      val parentTwo = backpackService.createBackpackWithSelectionChance("001100110001010", 483)
-
-      val createdChild = geneticAlgorithmService.createChild(parentOne, parentTwo)
-
-      createdChild.genes must not equal parentOne.genes
-      createdChild.genes must not equal parentTwo.genes
-      createdChild.genes.length mustBe backpackService.NUMBER_OF_GENES
-    }
-
     "draw an initial generation" in {
       val drawnGeneration = geneticAlgorithmService.drawInitialGeneration
-      drawnGeneration.length mustBe geneticAlgorithmService.GENERATIONSIZE
+      drawnGeneration.length mustBe ConfigService.getGenerationSize
     }
 
 
     "draw a next generation" in {
       val initialGeneration  = geneticAlgorithmService.drawInitialGeneration
       val nextGeneration = geneticAlgorithmService.drawGeneration(initialGeneration)
-        nextGeneration.length mustBe geneticAlgorithmService.GENERATIONSIZE
-      nextGeneration.drop(10).head.genes.length mustBe backpackService.NUMBER_OF_GENES
+        nextGeneration.length mustBe ConfigService.getGenerationSize
+      nextGeneration.drop(10).head.genes.length mustBe ConfigService.NUMBER_OF_GENES
     }
 
 
@@ -48,7 +37,13 @@ class GeneticAlgorithmServiceTest extends PlaySpec{
       val initialGeneration  = geneticAlgorithmService.drawInitialGeneration
       val population = geneticAlgorithmService.drawNextGenerations(initialGeneration)
       population.length mustBe 201
-      population.drop(33).head.length mustBe geneticAlgorithmService.GENERATIONSIZE
+      population.drop(33).head.length mustBe ConfigService.getGenerationSize
+    }
+
+    "calculate the avg of a generation" in {
+      val population = List(List(Backpack("110000000000001",514,263,514), Backpack("110000000000000",274,143,274)))
+      geneticAlgorithmService.population = population
+      geneticAlgorithmService.getAverages mustBe List(394.0)
     }
   }
 }

@@ -33,7 +33,6 @@ class AlgorithmController @Inject()(algorithmService: GeneticAlgorithmService) e
   }
 
   def getPopulationSize = Action(Ok(Json.obj("populationSize"->algorithmService.population.length)))
-  def getGenerationSize = Action(Ok(Json.obj("generationSize"->algorithmService.GENERATIONSIZE)))
 
   def getChartData = Action{
     val avgs = algorithmService.getAverages
