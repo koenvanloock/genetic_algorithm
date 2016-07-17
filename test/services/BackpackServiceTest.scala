@@ -1,7 +1,8 @@
 package services
 
-import models.{Trinket, Backpack}
+import models.backpackproblem.Trinket
 import org.scalatestplus.play.PlaySpec
+import services.backpackproblem.BackpackService
 
 class BackpackServiceTest extends PlaySpec{
 
@@ -25,23 +26,23 @@ class BackpackServiceTest extends PlaySpec{
     }
 
     "create a random backpack with the correct gene length" in {
-      backPackService.createRandomBackpack.genes.length mustBe ConfigService.NUMBER_OF_GENES
+      backPackService.createRandomIndividual.genes.length mustBe ConfigService.NUMBER_OF_GENES
     }
 
     "create a random backpack, it has selected trinkets" in {
-      val genes = backPackService.createRandomBackpack.genes
+      val genes = backPackService.createRandomIndividual.genes
       val charLength = genes.length - genes.replace("1","").length
       charLength mustBe  >(0)
     }
 
     "return all the trinkets of a Backpack" in {
-      val backpack = backPackService.createBackpack("100100100001001")
+      val backpack = backPackService.createIndividualFromGenes("100100100001001")
       backPackService.getBackpackTrinkets(backpack) mustBe List(Trinket(70.0,135.0,"Zonnebril"), Trinket(80.0,150.0,"Schoenen"), Trinket(90.0,173.0,"Armband"), Trinket(113.0,214.0,"Boek"), Trinket(120.0,240.0,"Blok goud"))
     }
 
     "create child has a crossover gene" in {
-      val parentOne = backPackService.createBackpackWithSelectionChance("110011001110101",250)
-      val parentTwo = backPackService.createBackpackWithSelectionChance("001100110001010", 483)
+      val parentOne = backPackService.createIndividualFromGenes("110011001110101")
+      val parentTwo = backPackService.createIndividualFromGenes("001100110001010")
 
       val createdChild = backPackService.createChild(parentOne, parentTwo)
 
@@ -51,14 +52,14 @@ class BackpackServiceTest extends PlaySpec{
     }
 
     "mutate a given backpack with mutating threshhold" in {
-      val backpack = backPackService.createBackpack("100100100001001")
+      val backpack = backPackService.createIndividualFromGenes("100100100001001")
       val mutatedPackGenes = backPackService.mutateChild(0.05, 95, backpack).genes
       mutatedPackGenes must not equal backpack.genes
       mutatedPackGenes.length mustBe ConfigService.NUMBER_OF_GENES
     }
 
     "not mutate when the threshold is too low" in {
-      val backpack = backPackService.createBackpack("100100100001001")
+      val backpack = backPackService.createIndividualFromGenes("100100100001001")
       val mutatedPackGenes = backPackService.mutateChild(0.05, 94, backpack).genes
       mutatedPackGenes mustBe backpack.genes
     }

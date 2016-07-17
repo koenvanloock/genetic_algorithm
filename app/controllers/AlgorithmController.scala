@@ -1,13 +1,12 @@
 package controllers
 
 import javax.inject.Inject
-
-import models.Backpack
+import models.backpackproblem.Backpack
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import services.GeneticAlgorithmService
+import services.BackpackAlgorithmService
 
-class AlgorithmController @Inject()(algorithmService: GeneticAlgorithmService) extends Controller{
+class AlgorithmController @Inject()(algorithmService: BackpackAlgorithmService) extends Controller{
 
   def runAlgorithm = Action{
     val initialGeneration = algorithmService.drawInitialGeneration

@@ -2,11 +2,12 @@ package services
 
 import javax.inject.Inject
 
-import models.{BackpackWithSelectionChance, Backpack}
+import models.backpackproblem.{BackpackWithSelectionChance, Backpack}
+import services.backpackproblem.BackpackService
 
 import scala.util.Random
 
-class GeneticAlgorithmService @Inject()(backpackService: BackpackService) {
+class BackpackAlgorithmService @Inject()(optimizableService: BackpackService) {
 
 
   type Generation = List[Backpack]
@@ -15,12 +16,12 @@ class GeneticAlgorithmService @Inject()(backpackService: BackpackService) {
 
   var population: Population = List()
 
-  def drawInitialGeneration: Generation = (0 until ConfigService.getGenerationSize).map { x => backpackService.createRandomBackpack }.toList
+  def drawInitialGeneration: Generation = (0 until ConfigService.getGenerationSize).map { x => optimizableService.createRandomIndividual }.toList
 
   def determineMatingChance(totalFitness: Double, generation: List[Backpack], cummulativeChance: Int = 0, generationWithSelectionChance: GenerationWithSelectionChance = List()): GenerationWithSelectionChance = {
     if (generation.nonEmpty) {
 
-      val backpackSelectionChance = if (generation.length > 1) (cummulativeChance + ConfigService.DISTRIBUTION_SCALE * backpackService.calculateFitness(generation.head.genes) / totalFitness).toInt else ConfigService.DISTRIBUTION_SCALE
+      val backpackSelectionChance = if (generation.length > 1) (cummulativeChance + ConfigService.DISTRIBUTION_SCALE * optimizableService.calculateFitness(generation.head.genes) / totalFitness).toInt else ConfigService.DISTRIBUTION_SCALE
       val backpackToAdd = BackpackWithSelectionChance(generation.head.genes, generation.head.value, generation.head.weight, generation.head.fitness, backpackSelectionChance)
       determineMatingChance(totalFitness, generation.tail, backpackToAdd.selectionChance, backpackToAdd :: generationWithSelectionChance)
     } else {
@@ -30,7 +31,7 @@ class GeneticAlgorithmService @Inject()(backpackService: BackpackService) {
 
 
   def drawNextGenerations(initialGeneration: Generation): Population = {
-    var population = List(initialGeneration.map(x => backpackService.createBackpack(x.genes)))
+    var population = List(initialGeneration.map(x => optimizableService.createIndividualFromGenes(x.genes)))
     (0 until ConfigService.getNumberOfGenerations).foreach { index =>
       val nextGeneration = drawGeneration(population.head)
       population = nextGeneration :: population
@@ -40,14 +41,14 @@ class GeneticAlgorithmService @Inject()(backpackService: BackpackService) {
   }
 
   def drawGeneration(previousGeneration: Generation): Generation = {
-    val totalFitness = previousGeneration.map(pack => backpackService.calculateFitness(pack.genes)).sum
+    val totalFitness = previousGeneration.map(pack => optimizableService.calculateFitness(pack.genes)).sum
     val generationWithSelectionChance = determineMatingChance(totalFitness, previousGeneration.sortBy(_.fitness))
 
     (0 until ConfigService.getGenerationSize).map { index =>
       val parentOne = selectRandomBackpackFromGeneration(generationWithSelectionChance)
       val parentTwo = selectRandomBackpackFromGeneration(generationWithSelectionChance)
 
-      backpackService.createChild(parentOne, parentTwo)
+      optimizableService.createChild(optimizableService.createIndividualFromGenes(parentOne.genes), optimizableService.createIndividualFromGenes(parentTwo.genes))
     }.toList
   }
 

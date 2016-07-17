@@ -1,6 +1,4 @@
-package services
-
-import models.Trinket
+package models.backpackproblem
 
 object TrinketFactory {
 

@@ -1,16 +1,17 @@
 package services
 
-import models.{Backpack, BackpackWithSelectionChance}
+import models.backpackproblem.Backpack
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatestplus.play.PlaySpec
+import services.backpackproblem.BackpackService
 
 @RunWith(classOf[JUnitRunner])
 class GeneticAlgorithmServiceTest extends PlaySpec{
 
   "GeneticAlgorithmService" should {
     val backpackService = new BackpackService()
-    val geneticAlgorithmService = new GeneticAlgorithmService(backpackService)
+    val geneticAlgorithmService = new BackpackAlgorithmService(backpackService)
 
 
     "draw a random backpack from a genereration" in {

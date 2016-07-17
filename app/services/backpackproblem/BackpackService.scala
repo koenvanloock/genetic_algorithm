@@ -1,10 +1,11 @@
-package services
+package services.backpackproblem
 
-import com.google.inject.Inject
-import models.{BackpackWithSelectionChance, Trinket, Backpack}
+import models.backpackproblem.{Backpack, BackpackWithSelectionChance, Trinket, TrinketFactory}
+import services.{ConfigService, OptimizableService}
+
 import scala.util.Random
 
-class BackpackService {
+class BackpackService extends OptimizableService[Backpack, String]{
 
   def calculateValue(genes: String): Double = {
     genes.zipWithIndex.map{ case(gene: Char, index: Int) => if(gene == '1') TrinketFactory.trinkets.drop(index).head.quality else 0 }.sum
@@ -19,7 +20,7 @@ class BackpackService {
     if(weight > ConfigService.getMaxWeight) 0.0 else calculateValue(genes)
   }
 
-  def createRandomBackpack = {
+  def createRandomIndividual = {
 
     val chosenIndices = (0 until ConfigService.NUMBER_OF_INITIAL_GENES).map( attempt => Random.nextInt(ConfigService.NUMBER_OF_GENES))
     val builder= new StringBuilder
@@ -32,10 +33,10 @@ class BackpackService {
         }
     )
 
-    createBackpack(builder.toString)
+    createIndividualFromGenes(builder.toString)
   }
 
-  def createChild(parentOne: BackpackWithSelectionChance, parentTwo: BackpackWithSelectionChance): Backpack = {
+  def createChild(parentOne: Backpack, parentTwo: Backpack): Backpack = {
     val splitStart = Random.nextInt(ConfigService.NUMBER_OF_GENES - 1)
     val splitStop = splitStart + 1 + Random.nextInt(ConfigService.NUMBER_OF_GENES - splitStart - 1)
 
@@ -57,7 +58,7 @@ class BackpackService {
     val newGenes = joinGenes(parentOne.genes, parentTwo.genes)
 
     val mutationThreshold = Random.nextInt(100)+1
-    mutateChild(ConfigService.getMutationPercentage, mutationThreshold,createBackpack(newGenes))
+    mutateChild(ConfigService.getMutationPercentage, mutationThreshold, createIndividualFromGenes(newGenes))
   }
 
   def mutateChild(mutationPercentage: Double, mutationThreshold: Int, child: Backpack) = {
@@ -73,13 +74,13 @@ class BackpackService {
             gene
           }
       }.foldLeft[String]("")((agg: String, charToAdd: Char) => agg + charToAdd)
-      createBackpack(newGenes)
+      createIndividualFromGenes(newGenes)
     }else{
       child
     }
   }
 
-  def createBackpack(newGenes: String): Backpack = {
+  def createIndividualFromGenes(newGenes: String): Backpack = {
     Backpack(newGenes, calculateValue(newGenes), calculateWeight(newGenes), calculateFitness(newGenes))
   }
 
@@ -90,4 +91,6 @@ class BackpackService {
   def getBackpackTrinkets(backpack: Backpack): List[Trinket] = {
     backpack.genes.zipWithIndex.flatMap { case (gene: Char, index: Int) => if (gene == '1') TrinketFactory.trinkets.drop(index).headOption else None }.toList
   }
+  override def getGeneStringFromIndividual(individual: Backpack): String = individual.genes
+
 }
