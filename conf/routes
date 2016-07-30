@@ -5,11 +5,11 @@
 # An example controller showing a sample home page
 GET         /                                        controllers.HomeController.index
 
-GET         /runalgorithm                            controllers.AlgorithmController.runAlgorithm
+GET         /runalgorithm                            controllers.BackpackAlgorithmController.runAlgorithm
 
-GET         /backpacks                               controllers.AlgorithmController.getBackpacksOfGeneration(generationNr: Option[Int], page: Option[Int], limit: Option[Int])
-GET         /populationsize                          controllers.AlgorithmController.getPopulationSize
-GET         /chartdata                               controllers.AlgorithmController.getChartData
+GET         /backpacks                               controllers.BackpackAlgorithmController.getBackpacksOfGeneration(generationNr: Option[Int], page: Option[Int], limit: Option[Int])
+GET         /populationsize                          controllers.BackpackAlgorithmController.getPopulationSize
+GET         /chartdata                               controllers.BackpackAlgorithmController.getChartData
 
 
 GET         /initialConfig                           controllers.ConfigController.getInitialConfig

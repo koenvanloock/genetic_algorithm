@@ -1,12 +1,13 @@
 package services.travelingsalesmanproblem
 
+import models.OptimizableService
 import models.travelingsalesmanproblem.{CityFactory, Trip}
-import services.{ConfigService, OptimizableService}
+import services.ConfigService
 
 import scala.util.Random
 
-class TravelingSalesManService extends OptimizableService[Trip,List[Int]]{
-  override def createRandomIndividual: Trip = createIndividualFromGenes(Random.shuffle((0 until 8).toList))
+class TravelingSalesManService extends OptimizableService[List[Int], Trip]{
+  override def createRandomIndividual: Trip[List[Int]] = createIndividualFromGenes(Random.shuffle((0 until 8).toList))
 
   def calculateTotalDistance(genes: List[Int], calculatedDistance: Double=0): Double = {
     val startingCity = CityFactory.cities.find(_.cityNr == genes.head).get
@@ -20,11 +21,11 @@ class TravelingSalesManService extends OptimizableService[Trip,List[Int]]{
 
   def calculateTime(genes: List[Int]): Double = calculateTotalDistance(genes) * 0.8 // token implementation
 
-  override def createIndividualFromGenes(genes: List[Int]): Trip = Trip(genes,calculateFitness(genes),calculateTotalDistance(genes), calculateTime(genes))
+  override def createIndividualFromGenes(genes: List[Int]): Trip[List[Int]] = Trip(genes,calculateFitness(genes),calculateTotalDistance(genes), calculateTime(genes))
 
-  override def getGeneStringFromIndividual(individual: Trip): String = individual.genes.mkString(",")
+  override def getGeneStringFromIndividual(individual: Trip[List[Int]]): String = individual.genes.mkString(",")
 
-  def mutateChild(mutationPercentage: Double, mutationThreshold: Int, trip: Trip): Trip = {
+  def mutateChild(mutationPercentage: Double, mutationThreshold: Int, trip: Trip[List[Int]]): Trip[List[Int]] = {
       if(mutationThreshold >100 - mutationPercentage * 100){
         val randomIndex = Random.nextInt(CityFactory.cities.length)
         val geneToShift = trip.genes.drop(randomIndex).head
@@ -46,7 +47,7 @@ class TravelingSalesManService extends OptimizableService[Trip,List[Int]]{
   }
 
 
-  override def createChild(parentOne: Trip, parentTwo: Trip): Trip = {
+  override def createChild(parentOne: Trip[List[Int]], parentTwo: Trip[List[Int]]): Trip[List[Int]] = {
     val splitStart = Random.nextInt(CityFactory.cities.length - 1)
     val splitStop = splitStart + 1 + Random.nextInt(CityFactory.cities.length - splitStart - 1)
     val crossOverA = parentOne.genes.slice(splitStart, splitStop)

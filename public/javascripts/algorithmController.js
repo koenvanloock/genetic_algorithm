@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module("SurvivalOfTheFittestApp").controller("algorithmController", ["$scope", "algorithmService", function($scope, algorithmService){
+angular.module("SurvivalOfTheFittestApp").controller("algorithmController", ["$scope","$location", "algorithmService", function($scope,$location, algorithmService){
 
     algorithmService.getInitialConfig().then(function(response){
         $scope.generationSize = response.data.generationSize;
@@ -62,6 +62,10 @@ angular.module("SurvivalOfTheFittestApp").controller("algorithmController", ["$s
 
     $scope.updateNumberOfGenerations = function(){
         algorithmService.setNumberOfGenerations($scope.numberOfGenerations);
+    };
+
+    $scope.gotoHome = function(){
+        $location.path("/");
     }
 
 } ]);

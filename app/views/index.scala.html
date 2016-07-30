@@ -11,82 +11,11 @@
     </head>
     <body ng-app="SurvivalOfTheFittestApp" ng-cloak>
 
-        <div ng-controller="algorithmController">
-
-            <md-content>
-                <md-toolbar class="md-hue-2">
-                    <h2 style="padding-left:20px ;" flex>Survival of the fittest!</h2>
-                    <md-button class="md-primary" ng-click="runAlgorithm()">Kweek met rugzakken!!!</md-button>
-                </md-toolbar>
-            </md-content>
-            <div layout = row>
-                <div flex="50" class="md-margin" >
-                    <div ng-show="backpacks.data.length && backpacks.data.length>0">
-                    <md-table-container >
-                        <table md-table md-progress="promise">
-                            <thead md-head style="background:  rgba(255, 215, 46, 0.9) ;">
-                                <tr md-row>
-                                    <th md-column>Genes</th>
-                                    <th md-column md-numeric>fitness</th>
-                                    <th md-column md-numeric>value</th>
-                                    <th md-column md-numeric>weight</th>
-                                </tr>
-                            </thead>
-                            <tbody md-body style="background:  rgba(255, 255, 0, 0.9) ;">
-                                <tr md-row md-auto-select ng-repeat="backpack in backpacks.data">
-                                    <td md-cell>{{backpack.genes}}</td>
-                                    <td md-cell>{{backpack.fitness}}</td>
-                                    <td md-cell>{{backpack.value}}</td>
-                                    <td md-cell>{{backpack.weight}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </md-table-container>
-                    <md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="query.page" md-total="{{generationSize}}" md-on-paginate="getBackpacks" md-page-select style="background:  rgba(255, 255, 0, 0.9) ;"></md-table-pagination>
-                    </div>
-
-                    <div layout="column" class="md-margin" style="background:  rgba(255, 215, 46, 0.7) ;">
-                        <div  layout="row" ng-show="generationNumbers && generationNumbers.length >0">
-                            <p style="font-weight: bold"  flex="30">Generation nr.</p>
-                            <md-select placeholder="generationNr" ng-model="query.generationNr" style="background:  rgba(255, 215, 46, 0.9) ;" flex="70"
-                            ng-change="getBackpacks()">
-                                <md-option ng-repeat="generationNumber in generationNumbers">{{generationNumber}}</md-option>
-                            </md-select>
-                        </div>
-
-                        <md-input-container>
-                            <label>Number of generations to draw</label>
-                            <input type="number" ng-model="numberOfGenerations" ng-change="updateNumberOfGenerations()">
-                        </md-input-container>
-                        <md-input-container>
-                            <label>Number of individuals per generation</label>
-                            <input type="number" ng-model="generationSize" ng-change="updateGenerationSize()">
-                        </md-input-container>
-
-                        <md-input-container>
-                            <label>mutation percentage</label>
-                            <input type="number" ng-model="mutationPercentage" ng-change="updateMutationPercentage()">
-                        </md-input-container>
-                        <md-input-container>
-                            <label>Maximum weight</label>
-                            <input type="number" ng-model="maxWeight" ng-change="updateMaxWeight()">
-                        </md-input-container>
-                    </div>
-                </div>
-
-
-
-                <div layout="column" ng-controller="chartController" flex="50" class="md-padding" ng-show="backpacks.data.length && backpacks.data.length>0">
-                    <canvas id="line" class="chart chart-line" chart-data="data" style="background:  rgba(255, 215, 46, 0.9); height: 800px;"
-                    class="md-whiteframe-z3"
-                    chart-labels="labels" chart-series="series" chart-options="options"
-                    chart-dataset-override="datasetOverride" chart-click="onClick">
-                    </canvas>
-                </div>
-            </div>
-        </div>
+        <div ng-view></div>
 
         <script type="application/javascript" src="@routes.Assets.versioned("bower_components/angular/angular.js")"></script>
+
+        <script type="application/javascript" src="@routes.Assets.versioned("bower_components/angular-route/angular-route.js")"></script>
 
         <script src="@routes.Assets.versioned("bower_components/angular-aria/angular-aria.js")"></script>
         <script src="@routes.Assets.versioned("bower_components/angular-animate/angular-animate.js")"></script>
@@ -97,6 +26,9 @@
 
 
         <script type="application/javascript" src="@routes.Assets.versioned("javascripts/survivalOfTheFittest.js")"></script>
+        <script type="application/javascript" src="@routes.Assets.versioned("javascripts/routes.js")"></script>
+
+        <script type="application/javascript" src="@routes.Assets.versioned("javascripts/mainController.js")"></script>
         <script type="application/javascript" src="@routes.Assets.versioned("javascripts/algorithmController.js")"></script>
         <script type="application/javascript" src="@routes.Assets.versioned("javascripts/chartController.js")"></script>
         <script type="application/javascript" src="@routes.Assets.versioned("javascripts/algorithmService.js")"></script>

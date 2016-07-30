@@ -4,7 +4,7 @@ import models.backpackproblem.Backpack
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatestplus.play.PlaySpec
-import services.backpackproblem.BackpackService
+import services.backpackproblem.{BackpackAlgorithmService, BackpackService}
 
 @RunWith(classOf[JUnitRunner])
 class GeneticAlgorithmServiceTest extends PlaySpec{

@@ -1,3 +1,5 @@
 package models.travelingsalesmanproblem
 
-case class Trip(genes: List[Int], fitness: Double, distance: Double, time: Double)
+import models.Optimizable
+
+case class Trip[Genes](genes: Genes, fitness: Double, distance: Double, time: Double) extends Optimizable[Genes]

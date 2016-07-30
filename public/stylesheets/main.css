@@ -1,5 +1,29 @@
-body{
+.backpack{
     background: url("../images/beach.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: absolute;
+    top: 0px; /* Header Height */
+    bottom: 0px; /* Footer Height */
+    width: 100%;
+}
+
+.travelingsalesman{
+    background: url("../images/travel.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: absolute;
+    top: 0px; /* Header Height */
+    bottom: 0px; /* Footer Height */
+    width: 100%;
+}
+
+body{
+    background: url("../images/genes.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

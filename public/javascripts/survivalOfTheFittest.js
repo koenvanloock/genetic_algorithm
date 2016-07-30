@@ -1,6 +1,4 @@
-
-
-angular.module("SurvivalOfTheFittestApp", ["ngMaterial","md.data.table","chart.js"]) .constant('base', {
+angular.module("SurvivalOfTheFittestApp", ["ngMaterial","ngRoute","md.data.table","chart.js"]) .constant('base', {
     url: window.location.origin
 });
 
