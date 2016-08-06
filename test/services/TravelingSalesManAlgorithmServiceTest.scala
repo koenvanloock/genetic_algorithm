@@ -1,22 +1,21 @@
 package services
 
-import models.backpackproblem.Backpack
+import models.travelingsalesmanproblem.Trip
+import services.travelingsalesmanproblem.{TravelingAlgorithmService, TravelingSalesManService}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatestplus.play.PlaySpec
-import services.backpackproblem.{BackpackAlgorithmService, BackpackService}
 
 @RunWith(classOf[JUnitRunner])
-class GeneticAlgorithmServiceTest extends PlaySpec{
-
-  "GeneticAlgorithmService" should {
-    val backpackService = new BackpackService()
-    val geneticAlgorithmService = new BackpackAlgorithmService(backpackService)
+class TravelingSalesManAlgorithmServiceTest extends PlaySpec{
+  "TravelingAlgorithmService" should {
+    val travelingSalesManService = new TravelingSalesManService()
+    val geneticAlgorithmService = new TravelingAlgorithmService(travelingSalesManService)
 
 
     "draw a random backpack from a genereration" in {
-      val generation  = List(backpackService.createBackpackWithSelectionChance("000001101110000",350),backpackService.createBackpackWithSelectionChance("110000101010000",650),backpackService.createBackpackWithSelectionChance("000000101010011",1000))
-      val drawnList = (0 to 10).map(x => geneticAlgorithmService.selectRandomBackpackFromGeneration(generation)).toList.distinct
+      val generation = List(travelingSalesManService.createTripWithSelectionChance(List(1,3,5,8,4,6,2,7), 135),travelingSalesManService.createTripWithSelectionChance(List(4,7,5,1,3,2,6,8),650),travelingSalesManService.createTripWithSelectionChance(List(8,7,5,1,4,2,6,3),1000))
+      val drawnList = (0 to 10).map(x => geneticAlgorithmService.selectRandomIndividualFromGeneration(generation)).toList.distinct
       drawnList.length mustBe >(1)
     }
 
@@ -29,8 +28,8 @@ class GeneticAlgorithmServiceTest extends PlaySpec{
     "draw a next generation" in {
       val initialGeneration  = geneticAlgorithmService.drawInitialGeneration
       val nextGeneration = geneticAlgorithmService.drawGeneration(initialGeneration)
-        nextGeneration.length mustBe ConfigService.getGenerationSize
-      nextGeneration.drop(10).head.genes.length mustBe ConfigService.NUMBER_OF_GENES
+      nextGeneration.length mustBe ConfigService.getGenerationSize
+      nextGeneration.drop(10).head.genes.length mustBe travelingSalesManService.NUMBER_OF_GENES
     }
 
 
@@ -42,9 +41,10 @@ class GeneticAlgorithmServiceTest extends PlaySpec{
     }
 
     "calculate the avg of a generation" in {
-      val population = List(List(Backpack("110000000000001",514,263,514), Backpack("110000000000000",274,143,274)))
+      val population = List(List(Trip(List(1,3,5,8,4,6,2,7),514,263,514), Trip(List(4,7,5,1,3,2,6,8),274,143,274)))
       geneticAlgorithmService.population = population
       geneticAlgorithmService.getAverages mustBe List(394.0)
     }
   }
+
 }

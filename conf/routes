@@ -5,17 +5,23 @@
 # An example controller showing a sample home page
 GET         /                                        controllers.HomeController.index
 
-GET         /runalgorithm                            controllers.BackpackAlgorithmController.runAlgorithm
-
+GET         /backpacks/runalgorithm                  controllers.BackpackAlgorithmController.runAlgorithm
+GET         /backpacks/populationsize                controllers.BackpackAlgorithmController.getPopulationSize
+GET         /backpacks/chartdata                     controllers.BackpackAlgorithmController.getChartData
 GET         /backpacks                               controllers.BackpackAlgorithmController.getBackpacksOfGeneration(generationNr: Option[Int], page: Option[Int], limit: Option[Int])
-GET         /populationsize                          controllers.BackpackAlgorithmController.getPopulationSize
-GET         /chartdata                               controllers.BackpackAlgorithmController.getChartData
 
+GET         /travelingsalesman/runalgorithm          controllers.TravelingAlgorithmController.runAlgorithm
+GET         /travelingsalesman/populationsize        controllers.TravelingAlgorithmController.getPopulationSize
+GET         /travelingsalesman/chartdata             controllers.TravelingAlgorithmController.getChartData
+GET         /travelingsalesman                       controllers.TravelingAlgorithmController.getTripsOfGeneration(generationNr: Option[Int], page: Option[Int], limit: Option[Int])
 
 GET         /initialConfig                           controllers.ConfigController.getInitialConfig
 
 POST        /mutationpercentage/:percentage          controllers.ConfigController.setMutationPercentage(percentage: Double)
+GET         /maxweight                               controllers.ConfigController.getMaxWeight
 POST        /maxweight/:weight                       controllers.ConfigController.setMaxWeight(weight: Int)
+GET         /upperbound                              controllers.ConfigController.getUpperBound
+POST        /upperbound/:upperbound                  controllers.ConfigController.setUpperBound(upperbound: Int)
 POST        /generationsize/:size                    controllers.ConfigController.setGenerationSize(size: Int)
 POST        /numberofgenerations/:generations        controllers.ConfigController.setNumberOfGenerations(generations: Int)
 

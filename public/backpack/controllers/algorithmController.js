@@ -2,11 +2,10 @@
 
 angular.module("SurvivalOfTheFittestApp").controller("algorithmController", ["$scope","$location", "algorithmService", function($scope,$location, algorithmService){
 
-    algorithmService.getInitialConfig().then(function(response){
-        $scope.generationSize = response.data.generationSize;
-        $scope.mutationPercentage = response.data.mutationPercentage;
-        $scope.maxWeight = response.data.maxWeight;
-        $scope.numberOfGenerations = response.data.numberOfGenerations;
+    var problemName = "backpacks";
+
+    algorithmService.getMaxWeight().then(function(response){
+        $scope.maxWeight = response.data;
     });
 
     $scope.runAlgorithm = function(){
@@ -14,21 +13,18 @@ angular.module("SurvivalOfTheFittestApp").controller("algorithmController", ["$s
         $scope.population = [];
         $scope.generationNumbers = [];
 
-        algorithmService.drawPopulation().then(function(){
+        algorithmService.drawPopulation(problemName).then(function(){
             //$scope.population = response.data;
 
-            algorithmService.getPopulationSize().then(function(response){
+            algorithmService.getPopulationSize(problemName).then(function(response){
                 $scope.populationSize = response.data.populationSize;
                 algorithmService.setPopulationSize($scope.populationSize);
                 for(var i=0; i< $scope.populationSize;i++){
                     $scope.generationNumbers.push(i);
                 }
             });
-            algorithmService.getInitialConfig().then(function(response){
-                $scope.generationSize = response.data.generationSize;
-                $scope.mutationPercentage = response.data.mutationPercentage;
-                $scope.maxWeight = response.data.maxWeight;
-                $scope.numberOfGenerations = response.data.numberOfGenerations;
+            algorithmService.getMaxWeight().then(function(response){
+                $scope.maxWeight = response.data;
                 $scope.getBackpacks();
             });
 
@@ -43,7 +39,7 @@ angular.module("SurvivalOfTheFittestApp").controller("algorithmController", ["$s
     };
 
     $scope.getBackpacks = function(){
-      algorithmService.getBackpacks($scope.query).then(function(result){
+      algorithmService.getIndividuals(problemName, $scope.query).then(function(result){
           $scope.backpacks = result
       })
     };

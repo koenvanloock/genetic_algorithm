@@ -43,14 +43,14 @@ abstract class GenericAlgorithmService[Optimi[X] <: Optimizable[X], Genes] @Inje
     val generationWithSelectionChance = determineMatingChance(totalFitness, previousGeneration.sortBy(_.fitness))
 
     (0 until ConfigService.getGenerationSize).map { index =>
-      val parentOne = selectRandomBackpackFromGeneration(generationWithSelectionChance)
-      val parentTwo = selectRandomBackpackFromGeneration(generationWithSelectionChance)
+      val parentOne = selectRandomIndividualFromGeneration(generationWithSelectionChance)
+      val parentTwo = selectRandomIndividualFromGeneration(generationWithSelectionChance)
 
       optimizableService.createChild(optimizableService.createIndividualFromGenes(parentOne._1.genes), optimizableService.createIndividualFromGenes(parentTwo._1.genes))
     }.toList
   }
 
-  def selectRandomBackpackFromGeneration(generation: GenerationWithSelectionChance): (Optimi[Genes], Double) = {
+  def selectRandomIndividualFromGeneration(generation: GenerationWithSelectionChance): (Optimi[Genes], Double) = {
     val chosenValue = Random.nextInt(ConfigService.DISTRIBUTION_SCALE) + 1
 
     def selectBackpack(lowerBound: Double = 0, remainingBackpacks: List[(Optimi[Genes], Double)] = generation.sortBy(_._2)): (Optimi[Genes], Double) = {

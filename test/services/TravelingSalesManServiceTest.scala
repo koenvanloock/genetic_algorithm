@@ -14,11 +14,11 @@ class TravelingSalesManServiceTest extends PlaySpec{
 
 
     "detect missing cities" in {
-      travelingSalesmanService.findMissingCities(List(1,2,3), List(4,3,1)) mustBe List(2)
+      travelingSalesmanService.findMissingCities(List(1,2,3,5), List(4,3,1,2)) mustBe List(5)
     }
 
     "detect double cities" in {
-      travelingSalesmanService.findDoubleCities(List(1,2,3), List(4,3,1)) mustBe List(4)
+      travelingSalesmanService.findDoubleCities(List(1,2,3,5,8), List(4,3,1,2,6)) mustBe List(4,6)
     }
 
     "create a child with all cities present" in {
@@ -38,6 +38,12 @@ class TravelingSalesManServiceTest extends PlaySpec{
       createdChild.genes must contain(8)
     }
 
-  }
 
+
+  "calculate the total distance of a trip" in {
+    val genes = List(1,4,3,7,8,5,6,2)
+
+    travelingSalesmanService.calculateTotalDistance(genes) mustBe  28.376237211312286
+  }
+}
 }

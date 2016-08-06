@@ -11,7 +11,6 @@ class ConfigController @Inject()() extends Controller{
   def getInitialConfig = Action{
     Ok(Json.obj(
       "mutationPercentage"  -> ConfigService.getMutationPercentage,
-      "maxWeight"           -> ConfigService.getMaxWeight,
       "generationSize"      -> ConfigService.getGenerationSize,
       "numberOfGenerations" -> ConfigService.getNumberOfGenerations
     ))
@@ -37,4 +36,12 @@ class ConfigController @Inject()() extends Controller{
     Ok
   }
 
+  def setUpperBound(upperBound: Int) = Action{
+    ConfigService.setUpperBound(upperBound)
+    Ok
+  }
+
+  def getUpperBound() = Action{ Ok(Json.toJson(ConfigService.getUpperBound))}
+
+  def getMaxWeight() = Action{ Ok(Json.toJson(ConfigService.getMaxWeight))}
 }

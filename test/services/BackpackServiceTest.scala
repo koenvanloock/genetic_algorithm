@@ -26,7 +26,7 @@ class BackpackServiceTest extends PlaySpec{
     }
 
     "create a random backpack with the correct gene length" in {
-      backPackService.createRandomIndividual.genes.length mustBe ConfigService.NUMBER_OF_GENES
+      backPackService.createRandomIndividual.genes.length mustBe backPackService.NUMBER_OF_GENES
     }
 
     "create a random backpack, it has selected trinkets" in {
@@ -48,14 +48,14 @@ class BackpackServiceTest extends PlaySpec{
 
       createdChild.genes must not equal parentOne.genes
       createdChild.genes must not equal parentTwo.genes
-      createdChild.genes.length mustBe ConfigService.NUMBER_OF_GENES
+      createdChild.genes.length mustBe backPackService.NUMBER_OF_GENES
     }
 
     "mutate a given backpack with mutating threshhold" in {
       val backpack = backPackService.createIndividualFromGenes("100100100001001")
       val mutatedPackGenes = backPackService.mutateChild(0.05, 95, backpack).genes
       mutatedPackGenes must not equal backpack.genes
-      mutatedPackGenes.length mustBe ConfigService.NUMBER_OF_GENES
+      mutatedPackGenes.length mustBe backPackService.NUMBER_OF_GENES
     }
 
     "not mutate when the threshold is too low" in {

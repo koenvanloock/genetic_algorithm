@@ -8,7 +8,8 @@ angular.module('SurvivalOfTheFittestApp')
             templateUrl: 'assets/backpack/views/backpack.html',
             controller: 'algorithmController'
         }).when('/travelingsalesman', {
-            templateUrl: 'assets/travelingsalesman/views/travelingsalesman.html'
+            templateUrl: 'assets/travelingsalesman/views/travelingsalesman.html',
+            controller: 'travelingSalesmanAlgorithmController'
         }).otherwise({
             redirectTo: '/'
         });

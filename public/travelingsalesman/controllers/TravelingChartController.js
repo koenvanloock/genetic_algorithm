@@ -1,17 +1,17 @@
-angular.module("SurvivalOfTheFittestApp").controller("chartController", ['$scope', 'algorithmService', function ($scope, algorithmService) {
+angular.module("SurvivalOfTheFittestApp").controller("travelingChartController", ['$scope', 'algorithmService', function ($scope, algorithmService) {
 
     $scope.labels = [];
-    $scope.series = ['Max.', 'Avg.'];
+    $scope.series = ['Min.', 'Avg.'];
     $scope.data = [];
     $scope.onClick = function (points, evt) {
         console.log(points, evt);
     };
 
-
+        var problemName="travelingsalesman";
 
         $scope.$watch(algorithmService.getLocalPopulationSize, function (newVal, oldVal) {
             if(newVal != oldVal){
-            algorithmService.getPopulationSize().then(function (response) {
+            algorithmService.getPopulationSize(problemName).then(function (response) {
                 $scope.labels = [];
             for (var i = 0; i < response.data.populationSize; i++) {
                 if (i % 10 === 0) {
@@ -19,7 +19,7 @@ angular.module("SurvivalOfTheFittestApp").controller("chartController", ['$scope
                 }
             }
 
-            algorithmService.getChartData().then(function (response) {
+            algorithmService.getChartData(problemName).then(function (response) {
                 var newData = [];
 
                 var resultAvgs = [];

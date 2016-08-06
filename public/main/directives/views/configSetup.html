@@ -1,0 +1,15 @@
+<div layout="column">
+    <md-input-container>
+        <label>Number of generations to draw</label>
+        <input type="number" ng-model="numberOfGenerations" ng-change="updateNumberOfGenerations()">
+    </md-input-container>
+    <md-input-container>
+        <label>Number of individuals per generation</label>
+        <input type="number" ng-model="generationSize" ng-change="updateGenerationSize()">
+    </md-input-container>
+
+    <md-input-container>
+        <label>mutation percentage</label>
+        <input type="number" ng-model="mutationPercentage" ng-change="updateMutationPercentage()">
+    </md-input-container>
+</div>

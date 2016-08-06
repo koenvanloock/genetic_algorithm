@@ -3,22 +3,22 @@ angular.module("SurvivalOfTheFittestApp").service("algorithmService", ["$http","
     var populationSize=0;
 
     return {
-        drawPopulation: function () {
-            return $http.get(base.url + "/runalgorithm");
+        drawPopulation: function (problemName) {
+            return $http.get(base.url + "/" + problemName +"/runalgorithm");
         },
 
-        getBackpacks: function(queryJson){
-            return $http.get(base.url + "/backpacks?=generationNr="+queryJson.generationNr+"&page="+queryJson.page+"&limit="+queryJson.limit);
+        getIndividuals: function(problemName, queryJson){
+            return $http.get(base.url + "/" + problemName + "?=generationNr="+queryJson.generationNr+"&page="+queryJson.page+"&limit="+queryJson.limit);
         },
 
-        getPopulationSize: function(){
-            return $http.get(base.url + "/populationsize");
+        getPopulationSize: function(problemName){
+            return $http.get(base.url + "/" + problemName + "/populationsize");
+        },
+        getChartData: function(problemName){
+            return $http.get(base.url + "/" + problemName + "/chartdata")
         },
         getInitialConfig: function(){
             return $http.get(base.url + "/initialConfig");
-        },
-        getChartData: function(){
-            return $http.get(base.url + "/chartdata")
         },
         getLocalPopulationSize: function(){return populationSize;},
         setPopulationSize: function(popSize){ populationSize = popSize;},
@@ -29,11 +29,20 @@ angular.module("SurvivalOfTheFittestApp").service("algorithmService", ["$http","
         setMaxWeight: function(maxWeight){
             return $http.post(base.url + "/maxweight/"+maxWeight);
         },
+        getMaxWeight: function(){
+            return $http.get(base.url + "/maxweight");
+        },
         setGenerationSize: function(generationSize){
             return $http.post(base.url + "/generationsize/"+generationSize);
         },
         setNumberOfGenerations: function(numberOfGenerations){
             return $http.post(base.url + "/numberofgenerations/"+numberOfGenerations)
+        },
+        setUpdateUpperBound: function(upperBound){
+            return $http.post(base.url + "/upperbound/"+upperBound);
+        },
+        getUpperBound: function() {
+            return $http.get(base.url + "/upperbound");
         }
     };
 }

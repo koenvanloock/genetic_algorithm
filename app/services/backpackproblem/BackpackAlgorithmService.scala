@@ -6,4 +6,4 @@ import models.backpackproblem.Backpack
 import services.GenericAlgorithmService
 
 class BackpackAlgorithmService @Inject()(backpackService: BackpackService)
-  extends GenericAlgorithmService[Backpack, String](backpackService) {}
+  extends GenericAlgorithmService[Backpack, String](backpackService)

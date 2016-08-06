@@ -9,4 +9,62 @@
             <md-button class="md-primary" ng-click="runAlgorithm()">Vind de weg!!!</md-button>
         </md-toolbar>
     </md-content>
+
+    <div layout=row>
+        <div flex="50" class="md-margin">
+            <div ng-show="trips.data.length && trips.data.length>0">
+                <md-table-container>
+                    <table md-table md-progress="promise">
+                        <thead md-head style="background:  rgba(255, 215, 46, 0.9) ;">
+                        <tr md-row>
+                            <th md-column>Genes</th>
+                            <th md-column md-numeric>fitness</th>
+                            <th md-column md-numeric>distance</th>
+                            <th md-column md-numeric>time</th>
+                        </tr>
+                        </thead>
+                        <tbody md-body style="background:  rgba(255, 255, 0, 0.9) ;">
+                        <tr md-row md-auto-select ng-repeat="trip in trips.data">
+                            <td md-cell>{{trip.genes}}</td>
+                            <td md-cell>{{trip.fitness}}</td>
+                            <td md-cell>{{trip.distance}}</td>
+                            <td md-cell>{{trip.time}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="query.page"
+                                     md-total="{{generationSize}}" md-on-paginate="getTrips" md-page-select
+                                     style="background:  rgba(255, 255, 0, 0.9) ;"></md-table-pagination>
+            </div>
+
+            <div layout="column" class="md-margin" style="background:  rgba(255, 215, 46, 0.7) ;">
+                <div layout="row" ng-show="generationNumbers && generationNumbers.length >0">
+                    <p style="font-weight: bold" flex="30">Generation nr.</p>
+                    <md-select placeholder="generationNr" ng-model="query.generationNr"
+                               style="background:  rgba(255, 215, 46, 0.9) ;" flex="70"
+                               ng-change="getTrips()">
+                        <md-option ng-repeat="generationNumber in generationNumbers">{{generationNumber}}</md-option>
+                    </md-select>
+                </div>
+
+                <config-setup></config-setup><md-input-container>
+                <label>Upper bound fitness subtr.</label>
+                <input type="number" ng-model="upperBound" ng-change="updateUpperBound()">
+            </md-input-container>
+            </div>
+        </div>
+            <div layout="column" ng-controller="travelingChartController" flex="50" class="md-padding"
+                 ng-show="trips.data.length && trips.data.length>0">
+                <canvas id="line" class="chart chart-line" chart-data="data"
+                        style="background:  rgba(255, 215, 46, 0.9); height: 800px;"
+                        class="md-whiteframe-z3"
+                        chart-labels="labels" chart-series="series" chart-options="options"
+                        chart-dataset-override="datasetOverride" chart-click="onClick">
+                </canvas>
+            </div>
+
+    </div>
+
+
 </div>
